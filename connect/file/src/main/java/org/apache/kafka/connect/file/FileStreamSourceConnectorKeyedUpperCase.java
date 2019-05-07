@@ -34,7 +34,7 @@ import java.util.Map;
  * Very simple connector that works with the console. This connector supports both source and
  * sink modes via its 'mode' setting.
  */
-public class FileStreamSourceConnector extends SourceConnector {
+public class FileStreamSourceConnectorKeyedUpperCase extends SourceConnector {
     public static final String TOPIC_CONFIG = "topic";
     public static final String FILE_CONFIG = "file";
     public static final String TASK_BATCH_SIZE_CONFIG = "batch.size";
