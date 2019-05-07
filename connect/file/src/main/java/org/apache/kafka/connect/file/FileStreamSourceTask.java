@@ -51,18 +51,18 @@ public class FileStreamSourceTask extends SourceTask {
     private char[] buffer = new char[1024];
     private int offset = 0;
     private String topic = null;
-    private int batchSize = FileStreamSourceConnector.DEFAULT_TASK_BATCH_SIZE;
+    private int batchSize = FileStreamSourceConnectorKeyedUpperCase.DEFAULT_TASK_BATCH_SIZE;
 
     private Long streamOffset;
 
     @Override
     public String version() {
-        return new FileStreamSourceConnector().version();
+        return new FileStreamSourceConnectorKeyedUpperCase().version();
     }
 
     @Override
     public void start(Map<String, String> props) {
-        filename = props.get(FileStreamSourceConnector.FILE_CONFIG);
+        filename = props.get(FileStreamSourceConnectorKeyedUpperCase.FILE_CONFIG);
         if (filename == null || filename.isEmpty()) {
             stream = System.in;
             // Tracking offset for stdin doesn't make sense
@@ -71,8 +71,8 @@ public class FileStreamSourceTask extends SourceTask {
         }
         // Missing topic or parsing error is not possible because we've parsed the config in the
         // Connector
-        topic = props.get(FileStreamSourceConnector.TOPIC_CONFIG);
-        batchSize = Integer.parseInt(props.get(FileStreamSourceConnector.TASK_BATCH_SIZE_CONFIG));
+        topic = props.get(FileStreamSourceConnectorKeyedUpperCase.TOPIC_CONFIG);
+        batchSize = Integer.parseInt(props.get(FileStreamSourceConnectorKeyedUpperCase.TASK_BATCH_SIZE_CONFIG));
     }
 
     @Override
@@ -150,6 +150,8 @@ public class FileStreamSourceTask extends SourceTask {
                             log.trace("Read a line from {}", logFilename());
                             if (records == null)
                                 records = new ArrayList<>();
+                            String ip = line.substring(0, line.indexOf('-')).trim();
+                            line=line.toUpperCase();
                             records.add(new SourceRecord(offsetKey(filename), offsetValue(streamOffset), topic, null,
                                     null, null, VALUE_SCHEMA, line, System.currentTimeMillis()));
 
